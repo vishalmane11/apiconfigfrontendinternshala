@@ -1,40 +1,58 @@
 import React, { useEffect } from "react";
-import axios from "./config/axios";
 import { Link, Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
 import Profile from "./components/Profile";
+import { useDispatch, useSelector } from "react-redux";
+import { asynccurrentUser, asyncremoveUser } from "./store/Actions/userActions";
 const App = () => {
-    const TestRoute = async () => {
-        try {
-            const { data } = await axios.get("/");
-            console.log(data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    const { isAuth, user } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        TestRoute();
+        dispatch(asynccurrentUser());
     }, []);
 
-    return (
+    const LogoutHandler = () => {
+        console.log("click");
+        dispatch(asyncremoveUser());
+    };
+
+    return user ? (
         <div className="h-screen w-screen">
             <nav className="p-5 flex gap-x-5">
                 <Link to="/">Home</Link>
-                <Link to="/signup">Signup</Link>
-                <Link to="/signin">Signin</Link>
-                <Link to="/profile">Profile</Link>
+                {!isAuth ? (
+                    <>
+                        <Link to="/signup">Signup</Link>
+                        <Link to="/signin">Signin</Link>
+                    </>
+                ) : (
+                    <>
+                        <button
+                            className="flex justify-center items-center"
+                            title="Signout"
+                            onClick={LogoutHandler}
+                        >
+                            <img
+                                className="w-[10vh] h-[10vh] object-cover rounded-full"
+                                src={user.avatar.url}
+                                alt=""
+                            />
+                        </button>
+                    </>
+                )}
             </nav>
             <hr />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={!isAuth ? <Home /> : <Profile />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/signin" element={<Signin />} />
-                <Route path="/profile" element={<Profile />} />
             </Routes>
         </div>
+    ) : (
+        <h1>Loading...</h1>
     );
 };
 

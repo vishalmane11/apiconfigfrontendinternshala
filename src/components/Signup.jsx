@@ -1,8 +1,12 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { asyncsignup } from "../store/Actions/userActions";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+    const navigate = useNavigate();
+    const { isAuth } = useSelector((state) => state.user);
+
     const dispatch = useDispatch();
     const signupuser = () => {
         const newuser = {
@@ -17,9 +21,12 @@ const Signup = () => {
         dispatch(asyncsignup(newuser));
     };
 
+    useEffect(() => {
+        isAuth && navigate("/");
+    }, [isAuth]);
     return (
         <div>
-            <button onClick={signupuser}>Signin User</button>
+            <button onClick={signupuser}>Signup User</button>
         </div>
     );
 };
