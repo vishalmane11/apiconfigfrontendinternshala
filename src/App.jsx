@@ -19,7 +19,7 @@ const App = () => {
         dispatch(asyncremoveUser());
     };
 
-    return user ? (
+    return (
         <div className="h-screen w-screen">
             <nav className="p-5 flex gap-x-5">
                 <Link to="/">Home</Link>
@@ -37,7 +37,7 @@ const App = () => {
                         >
                             <img
                                 className="w-[10vh] h-[10vh] object-cover rounded-full"
-                                src={user.avatar.url}
+                                src={user && user.avatar.url}
                                 alt=""
                             />
                         </button>
@@ -51,8 +51,6 @@ const App = () => {
                 <Route path="/signin" element={<Signin />} />
             </Routes>
         </div>
-    ) : (
-        <h1>Loading...</h1>
     );
 };
 
