@@ -12,6 +12,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(asynccurrentUser());
+        console.log("hii")
     }, []);
 
     const LogoutHandler = () => {
